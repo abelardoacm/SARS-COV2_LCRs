@@ -56,8 +56,15 @@ if all requirements are met you should be ready to go
 │   └── Raw_database <- Place here genomic genbank files 
 │
 └── results
-    ├── GenFeatures_locations <- Contains csv files with genomic features extracted from genbank file
-    ├── Proteomic_fasta <- Fasta aminoacid files to serve as seg input
-    ├── seg <- NCBI seg analysis output for high (.faa), low (.faa) and both (.csv) type of sequences
 ```
 >### Using SARS-COV2_LCRs
+
+This repository contains all the scripts used in the research article titled: "Two Short Low Complexity Regions (LCRs) are Hallmark Sequences of the Delta SARS-CoV- 2 Variant Spike Protein", [currently available as a preprint](https://t.co/oYl7vinB49?amp=1). To access the complete database, please check the supplementary files for the list of NCBI accession IDs of analyzed files for each variant. A sample dataset containing Beta variant genomes is shared [here](/data/Raw_database/).
+
+To reproduce the analysis, from [/bin/](/bin/) type the following command:
+```
+./SARS-COV2_LCRs.sh
+```
+you will be prompted for the **seg** parameters one at a time (we used, window = 12, locut = 1.9 and hicut = 2.1).
+
+Note that the previous command performs the full analysis for each **.gb** file contained in [/data/Raw_database/](/data/Raw_database/). It begins invoking [BD_seg.sh](bin/BD_seg.sh), which reads each **.gb** file to build a fasta file with genomic coordinates on headers. Then NCBI seg is used via [Just_a_seg_envelope.sh](bin/Just_a_seg_envelope.sh). Output is saved in a csv file suitable for exploration with R. The pipeline continues with the script [Analyze_LCRs.R](bin/Analyze_LCRs.R) that computes counts of the SARS-CoV2 LCRs of interest and exports **.tiff** barplots to [results](/results/). Finally, [Plot_proteome_complexity.R](bin/Plot_proteome_complexity.R) graphs the estimated average complexity for each position in analyzed proteomes per file.
